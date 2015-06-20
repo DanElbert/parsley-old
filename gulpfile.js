@@ -89,10 +89,6 @@ gulp.task('copy', function () {
     dot: true
   }).pipe(gulp.dest('dist'));
 
-  var bower = gulp.src([
-    'bower_components/**/*'
-  ]).pipe(gulp.dest('dist/bower_components'));
-
   var elements = gulp.src(['www/elements/**/*.html'])
     .pipe(gulp.dest('dist/elements'));
 
@@ -106,7 +102,7 @@ gulp.task('copy', function () {
     .pipe($.rename('elements.vulcanized.html'))
     .pipe(gulp.dest('dist/elements'));
 
-  return merge(www, bower, elements, vulcanized, swBootstrap, swToolbox)
+  return merge(www, elements, vulcanized, swBootstrap, swToolbox)
     .pipe($.size({title: 'copy'}));
 });
 
@@ -177,8 +173,27 @@ gulp.task('precache', function (callback) {
 // Clean Output Directory
 gulp.task('clean', del.bind(null, ['.tmp', 'dist']));
 
+gulp.task('start_express', function (cb) {
+  process.env.NODE_PATH = "./config:./app/controllers";
+  process.env.NODE_ENV = "development";
+  process.env.PORT = "3003";
+  var called = false;
+
+	return $.nodemon({
+	  script: 'server.js'
+	}).on('start', function () {
+    if (!called) {
+      called = true;
+      cb();
+    }
+  });
+
+});
+
+gulp.task('dist_env', function() { process.env.SERVE_COMPILED = 'true'; });
+
 // Watch Files For Changes & Reload
-gulp.task('serve', ['styles', 'elements', 'images'], function () {
+gulp.task('serve', ['styles', 'elements', 'images', 'start_express'], function () {
   browserSync({
     notify: false,
     snippetOptions: {
@@ -189,16 +204,11 @@ gulp.task('serve', ['styles', 'elements', 'images'], function () {
         }
       }
     },
+    proxy: "http://localhost:3003"
     // Run as an https by uncommenting 'https: true'
     // Note: this uses an unsigned certificate which on first access
     //       will present a certificate warning in the browser.
-    // https: true,
-    server: {
-      baseDir: ['.tmp', 'www'],
-      routes: {
-        '/bower_components': 'bower_components'
-      }
-    }
+    // https: true
   });
 
   gulp.watch(['www/**/*.html'], reload);
@@ -209,7 +219,7 @@ gulp.task('serve', ['styles', 'elements', 'images'], function () {
 });
 
 // Build and serve the output from the dist build
-gulp.task('serve:dist', ['default'], function () {
+gulp.task('serve:dist', ['default', 'dist_env', 'start_express'], function () {
   browserSync({
     notify: false,
     snippetOptions: {
@@ -224,8 +234,17 @@ gulp.task('serve:dist', ['default'], function () {
     // Note: this uses an unsigned certificate which on first access
     //       will present a certificate warning in the browser.
     // https: true,
-    server: 'dist'
+    proxy: "http://localhost:3003"
   });
+});
+
+gulp.task('sym_bower_components', function() {
+  return gulp.src('bower_components')
+    .pipe($.symlink('dist/bower_components'));
+});
+
+gulp.task('unsym_bower_components', function() {
+  del('dist/bower_components');
 });
 
 // Build Production Files, the Default Task
@@ -233,8 +252,8 @@ gulp.task('default', ['clean'], function (cb) {
   runSequence(
     ['copy', 'styles'],
     'elements',
-    ['jshint', 'images', 'fonts', 'html'],
-    'vulcanize', 'precache',
+    ['jshint', 'images', 'fonts', 'html', 'sym_bower_components'],
+    'vulcanize', 'precache', 'unsym_bower_components',
     cb);
 });
 
