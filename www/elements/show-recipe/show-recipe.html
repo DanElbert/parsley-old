@@ -1,0 +1,78 @@
+<dom-module id="show-recipe">
+  <style>
+    :host {
+      display: block;
+    }
+  </style>
+  <template>
+    <iron-ajax
+        id="ajaxer"
+        verbose
+        handle-as="json"
+        on-response="_handleAjax"
+        on-error="_handleAjaxError">
+    </iron-ajax>
+
+    <h3>{{recipe.name}}</h3>
+    <ul>
+      <template is="dom-repeat" items="{{recipe.ingredients}}">
+        <li>
+          <span>{{item.quantity}}</span>
+          <span>{{item.unit}}</span>
+          <span>{{item.name}}</span>
+        </li>
+      </template>
+    </ul>
+    <ol>
+      <template is="dom-repeat" items="{{recipe.steps}}">
+        <li>
+          <span>{{item}}</span>
+        </li>
+      </template>
+    </ol>
+
+  </template>
+</dom-module>
+<script>
+  (function () {
+    Polymer({
+      is: 'show-recipe',
+      properties: {
+        baseUrl: {
+          type: String,
+          value: '/api/recipes/'
+        },
+        recipe: {
+          type: Object,
+          value: {}
+        },
+        recipeId: {
+          type: Number,
+          observer: '_recipeIdChanged'
+        }
+      },
+
+      _ajaxUrl: function(baseUrl, recipeId) {
+        return baseUrl + recipeId;
+      },
+
+      _recipeIdChanged: function(newValue, oldValue) {
+        if (newValue != "") {
+          this.$.ajaxer.url = this._ajaxUrl(this.baseUrl, this.recipeId);
+          this.$.ajaxer.generateRequest();
+        }
+      },
+
+      _handleAjax: function(evt, x) {
+        console.log("good!");
+        console.log(evt);
+        this.set('recipe', this.$.ajaxer.lastResponse);
+      },
+
+      _handleAjaxError: function(evt) {
+        console.log("bad!");
+        console.log(evt);
+      }
+    });
+  })();
+</script>

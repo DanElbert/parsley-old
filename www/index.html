@@ -74,9 +74,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 <span>Home</span>
               </a>
 
-              <a data-route="users" href="/users">
+              <a data-route="recipes" href="/recipes">
                 <iron-icon icon="info"></iron-icon>
-                <span>Users</span>
+                <span>Recipes</span>
               </a>
 
               <a data-route="contact" href="/contact">
@@ -97,10 +97,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <paper-icon-button icon="search"></paper-icon-button>
 
           <!-- Application name -->
-          <div class="middle paper-font-display2 app-name">Polymer Starter Kit</div>
+          <div class="middle paper-font-display2 app-name">Parsley</div>
 
           <!-- Application sub title -->
-          <div class="bottom title"></div>
+          <div class="bottom title">A recipe manager</div>
 
         </paper-toolbar>
 
@@ -142,20 +142,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
             </section>
 
-            <section data-route="users">
+            <section data-route="recipes">
               <paper-material elevation="1">
-                <h2 class="paper-font-display2">Users</h2>
-                <p>This is the users section</p>
-                <a href="/users/Rob">Rob</a>
+                <h2 class="paper-font-display2">Recipes</h2>
+                <p>This is a list of recipes</p>
+                <a href="/recipes/5">Grilled Cheese</a>
+                <a href="/recipes/25">Other Grilled Cheese</a>
               </paper-material>
             </section>
 
-            <section data-route="user-info">
+            <section data-route="recipe-info">
               <paper-material elevation="1">
-                <h2 class="paper-font-display2">
-                User:<span>{{params.name}}</span>
-                </h2>
-                <div>This is <span>{{params.name}}</span>'s section</div>
+                <h4 class="paper-font-display2">Recipe Details</h4>
+                <span>{{recipeId}}</span>
+                <show-recipe id="test" recipe-id="{{recipeId}}"></show-recipe>
               </paper-material>
             </section>
 
