@@ -18,7 +18,6 @@ module.exports = function (app) {
     threshold: 512
   }));
 
-  // Use winston on production
   var log = 'dev';
 
   // Don't log during tests
@@ -32,9 +31,7 @@ module.exports = function (app) {
     app.use(express.static(config.root + '/dist'));
   }
 
-  var bower_components_router = express.Router();
-  bower_components_router.use(express.static(config.root + '/bower_components'));
-  app.use('/bower_components', bower_components_router);
+  app.use('/bower_components', express.static(config.root + '/bower_components'));
 
   // expose package.json to views
   app.use(function (req, res, next) {
