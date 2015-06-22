@@ -1,0 +1,39 @@
+<dom-module id="recipe-list">
+  <style>
+    :host {
+      display: block;
+    }
+  </style>
+  <template>
+
+    <iron-ajax
+      auto
+      url="{{url}}"
+      last-response="{{recipeList}}"></iron-ajax>
+
+    <template is="dom-repeat" items="{{recipeList}}">
+      <a href="{{recipeUrl(item.id)}}">{{item.name}}</a>
+    </template>
+  </template>
+</dom-module>
+<script>
+  (function () {
+    Polymer({
+      is: 'recipe-list',
+      properties: {
+        url: {
+          type: String,
+          notify: true
+        },
+        recipeList: {
+          type: Array,
+          notify: true
+        }
+      },
+
+      recipeUrl: function(id) {
+        return "/recipes/" + id;
+      }
+    });
+  })();
+</script>

@@ -1,4 +1,5 @@
 var gc = {
+  id: 5,
   name: "Grilled Cheese",
   steps: [
     "Butter bread",
@@ -13,6 +14,7 @@ var gc = {
 };
 
 var c = {
+  id: 25,
   name: "Cereal and Milk",
   steps: [
     "Pour cereal in bowl",
