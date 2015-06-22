@@ -1,5 +1,6 @@
 
 var express = require('express');
+var config = require('config');
 
 var recipesController = require("recipesController");
 
@@ -20,6 +21,19 @@ module.exports = function (app) {
     .post(recipesController.update)
     .delete(recipesController.destroy);
 
+  apiRoutes.all('*', function(req, res) {
+    res.sendStatus(404);
+  })
 
   app.use('/api', apiRoutes);
+
+  // Anything not under /api should just return the index page; the index
+  // will do the rest of the routing.
+  app.get('*', function(req, res) {
+    if (config.serveCompiled !== 'true') {
+      res.sendFile(config.root + '/www/index.html');
+    } else {
+      res.sendFile(config.root + '/dist/index.html');
+    }
+  });
 }

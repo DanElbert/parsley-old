@@ -64,14 +64,10 @@
       },
 
       _handleAjax: function(evt, x) {
-        console.log("good!");
-        console.log(evt);
         this.set('recipe', this.$.ajaxer.lastResponse);
       },
 
       _handleAjaxError: function(evt) {
-        console.log("bad!");
-        console.log(evt);
       }
     });
   })();

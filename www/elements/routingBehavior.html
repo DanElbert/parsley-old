@@ -1,0 +1,27 @@
+<script type="text/javascript">
+
+  // Adds support for routing links within a webcomponent.  Since shadow dom
+  // retargets events, the Page.js router never processes events for links clicked
+  // inside componenents
+  RoutingBehavior = {
+
+    listeners: {
+      click: '_handleRoutingClick'
+    },
+
+    _handleRoutingClick: function(e) {
+      var normalized = Polymer.dom(e);
+      var el = normalized.rootTarget;
+      while (el && 'A' !== el.nodeName) el = el.parentNode;
+      if (!el || 'A' !== el.nodeName) return;
+
+      var href = el.getAttribute('href');
+
+      if (href !== undefined && href !== null && href !== '') {
+        e.preventDefault();
+        page.show(href);
+      }
+    }
+
+  };
+</script>

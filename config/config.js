@@ -7,6 +7,7 @@ var production = require('./env/production');
 
 var defaults = {
   root: path.normalize(__dirname + '/..'),
+  serveCompiled: process.env.SERVE_COMPILED || 'false',
   configure: function() {}
 };
 

@@ -1,0 +1,24 @@
+
+<dom-module id="routing-a">
+</dom-module>
+<script>
+  (function() {
+    Polymer({
+      is: 'routing-a',
+      extends: 'a',
+
+      listeners: {
+        'click': '_handleClick'
+      },
+
+      _handleClick: function(e) {
+        var href = this.getAttribute("href");
+
+        if (href !== undefined && href !== null && href !== '') {
+          e.preventDefault();
+          page.show(href);
+        }
+      }
+    });
+  })();
+</script>

@@ -20,10 +20,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     });
 
     page('/recipes', function () {
+      console.log("changed to view recipe list view");
       app.route = 'recipes';
     });
 
     page('/recipes/:id', function (ctx) {
+      console.log("changed to view recipe view");
       app.recipeId = ctx.params.id;
       app.route = 'recipe-info';
     });
@@ -34,7 +36,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     // add #! before urls
     page({
-      hashbang: true
+      //hashbang: true
     });
 
   });
