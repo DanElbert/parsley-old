@@ -20,18 +20,44 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     });
 
     page('/recipes', function () {
-      console.log("changed to view recipe list view");
-      app.route = 'recipes';
+      app.recipesData.getAll({}, function(data) {
+        app.recipeList = data;
+        app.route = 'recipes';
+      },
+      function(err, msg) {
+        app.errorObj = {error: err, message: msg};
+        app.route = 'error';
+      });
     });
 
     page('/recipes/:id', function (ctx) {
-      console.log("changed to view recipe view");
-      app.recipeId = ctx.params.id;
-      app.route = 'recipe-info';
+      app.recipesData.get(ctx.params.id, function(data) {
+        app.showRecipe = data;
+        app.route = 'show-recipe';
+      },
+      function(err, msg) {
+        app.errorObj = {error: err, message: msg};
+        app.route = 'error';
+      });
+    });
+
+    page('/recipes/:id/edit', function(ctx) {
+      app.recipesData.get(ctx.params.id, function(data) {
+        app.editRecipe = data;
+        app.route = 'edit-recipe';
+      },
+      function(err, msg) {
+        app.errorObj = {error: err, message: msg};
+        app.route = 'error';
+      });
     });
 
     page('/contact', function () {
       app.route = 'contact';
+    });
+
+    page('*', function() {
+      app.route = "404";
     });
 
     // add #! before urls

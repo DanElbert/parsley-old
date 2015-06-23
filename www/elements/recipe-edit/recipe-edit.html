@@ -1,0 +1,40 @@
+<dom-module id="edit-recipe">
+  <style>
+    :host {
+      display: block;
+    }
+  </style>
+  <template>
+    <h3>{{recipe.name}}</h3>
+    <ul>
+      <template is="dom-repeat" items="{{recipe.ingredients}}">
+        <li>
+          <span>{{item.quantity}}</span>
+          <span>{{item.unit}}</span>
+          <span>{{item.name}}</span>
+        </li>
+      </template>
+    </ul>
+    <ol>
+      <template is="dom-repeat" items="{{recipe.steps}}">
+        <li>
+          <span>{{item}}</span>
+        </li>
+      </template>
+    </ol>
+
+  </template>
+</dom-module>
+<script>
+  (function () {
+    Polymer({
+      is: 'edit-recipe',
+      properties: {
+        recipe: {
+          type: Object,
+          value: {}
+        }
+      }
+    });
+  })();
+</script>

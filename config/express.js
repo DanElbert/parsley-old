@@ -9,7 +9,6 @@ var config = require('config');
 var pkg = require('../package.json');
 
 var env = process.env.NODE_ENV || 'development';
-var serveCompiled = process.env.SERVE_COMPILED || 'false';
 
 module.exports = function (app) {
 
@@ -25,7 +24,7 @@ module.exports = function (app) {
   if (env !== 'test') app.use(morgan(log));
 
   // Static files middleware
-  if (serveCompiled !== 'true') {
+  if (config.serveCompiled !== 'true') {
     app.use(express.static(config.root + '/www'));
   } else {
     app.use(express.static(config.root + '/dist'));

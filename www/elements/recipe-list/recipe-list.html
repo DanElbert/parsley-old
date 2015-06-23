@@ -5,12 +5,6 @@
     }
   </style>
   <template>
-
-    <iron-ajax
-      auto
-      url="{{url}}"
-      last-response="{{recipeList}}"></iron-ajax>
-
     <template is="dom-repeat" items="{{recipeList}}">
       <a is="routing-a" href="{{recipeUrl(item.id)}}">{{item.name}}</a>
     </template>
@@ -21,10 +15,6 @@
     Polymer({
       is: 'recipe-list',
       properties: {
-        url: {
-          type: String,
-          notify: true
-        },
         recipeList: {
           type: Array,
           notify: true

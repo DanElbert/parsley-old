@@ -15,8 +15,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <meta charset="utf-8">
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="generator" content="Polymer Starter Kit" />
-  <title>Polymer Starter Kit</title>
+  <title>Parsley</title>
   <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
   <!-- Chrome for Android theme color -->
@@ -155,15 +154,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 <h2 class="paper-font-display2">Recipes</h2>
                 <p>This is a list of recipes</p>
 
-                <recipe-list url="/api/recipes/"></recipe-list>
+                <recipe-list recipe-list="{{recipeList}}"></recipe-list>
 
               </paper-material>
             </section>
 
-            <section data-route="recipe-info">
+            <section data-route="show-recipe">
               <paper-material elevation="1">
                 <h4 class="paper-font-display2">Recipe Details</h4>
-                <show-recipe id="test" recipe-id="{{recipeId}}"></show-recipe>
+                <recipe-show id="test" recipe="{{showRecipe}}"></recipe-show>
               </paper-material>
             </section>
 
@@ -171,6 +170,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               <paper-material elevation="1">
                 <h2 class="paper-font-display2">Contact</h2>
                 <p>This is the contact section</p>
+              </paper-material>
+            </section>
+
+            <section data-route="error">
+              <paper-material elevation="1">
+                <h1>{{errorObj.message}}</h1>
+                <p>{{errorObj.error}}</p>
+              </paper-material>
+            </section>
+
+            <section data-route="404">
+              <paper-material elevation="1">
+                <h1>Not Found</h1>
+                <p>There appears to be nothing here</p>
               </paper-material>
             </section>
 
@@ -198,6 +211,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   <!-- build:js scripts/app.js -->
   <script src="/scripts/app.js"></script>
+  <script src="/bower_components/reqwest/reqwest.min.js"></script>
+  <script src="/scripts/data-access.js"></script>
   <!-- endbuild-->
 </body>
 
