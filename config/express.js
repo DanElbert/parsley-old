@@ -32,18 +32,15 @@ module.exports = function (app) {
 
   app.use('/bower_components', express.static(config.root + '/bower_components'));
 
-  // expose package.json to views
-  app.use(function (req, res, next) {
-    res.locals.pkg = pkg;
-    res.locals.env = env;
-    next();
-  });
-
-  // bodyParser should be above methodOverride
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
 
   app.use(session({
     keys: [config.sessionKey]
   }));
+
+  // Error handler
+  // app.use(function(err, req, res, next) {
+  //
+  // });
 };

@@ -30,6 +30,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       });
     });
 
+    page('/recipes/new', function() {
+      app.newRecipe = app.recipesData.new();
+      app.route = 'new-recipe';
+    });
+
     page('/recipes/:id', function (ctx) {
       app.recipesData.get(ctx.params.id, function(data) {
         app.showRecipe = data;
@@ -60,10 +65,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       app.route = "404";
     });
 
-    // add #! before urls
-    page({
-      //hashbang: true
-    });
+    // Initialize page router after any other WebCompoentsReady event handlers
+    setTimeout(function() {
+      page({
+        //hashbang: true
+      });
+    }, 1);
 
   });
 </script>

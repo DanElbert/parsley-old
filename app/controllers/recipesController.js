@@ -1,3 +1,5 @@
+var mongo = require('mongoskin');
+
 var gc = {
   id: 5,
   name: "Grilled Cheese",
@@ -30,17 +32,25 @@ var c = {
 module.exports = {
 
   load: function(req, res, next) {
-    if (req.params.id == "5") { req.recipe = gc; }
-    else { req.recipe = c; }
-    next();
+    req.db.recipes.findOne({_id: mongo.ObjectID.createFromHexString(req.params.id)}, function(err, results) {
+      if (err) throw err;
+      req.recipe = results;
+      next();
+    });
   },
 
   index: function(req, res) {
-    res.json([gc, c]);
+    req.db.recipes.find().toArray(function(err, results) {
+      if (err) throw err;
+      res.json(results);
+    });
   },
 
   create: function(req, res) {
-
+    req.db.recipes.insert(req.params.recipe, function(err, results) {
+      if (err) throw err;
+      res.json(results);
+    });
   },
 
   show: function(req, res) {

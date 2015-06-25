@@ -6,7 +6,7 @@
   </style>
   <template>
     <template is="dom-repeat" items="{{recipeList}}">
-      <a is="routing-a" href="{{recipeUrl(item.id)}}">{{item.name}}</a>
+      <a is="routing-a" href="{{recipeUrl(item._id)}}">{{item.name}}</a>
     </template>
   </template>
 </dom-module>

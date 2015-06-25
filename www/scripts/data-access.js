@@ -85,6 +85,10 @@
 
     update: function(recipe, callback, errback) {
       put('recipes/' + recipe.id, recipe, callback, errback);
+    },
+
+    new: function() {
+      return {name: 'junky garbage', steps: [], ingredients: []};
     }
   };
 

@@ -1,11 +1,14 @@
-<dom-module id="edit-recipe">
+<dom-module id="recipe-edit">
   <style>
     :host {
-      display: block;
+
     }
   </style>
   <template>
-    <h3>{{recipe.name}}</h3>
+    <paper-input label="Name"></paper-input>
+
+    <h4>Ingredients</h4>
+
     <ul>
       <template is="dom-repeat" items="{{recipe.ingredients}}">
         <li>
@@ -15,25 +18,47 @@
         </li>
       </template>
     </ul>
+    <paper-fab on-tap="_handleAddIngredient" icon="add"></paper-fab>
+
+    <h4>Steps</h4>
+
     <ol>
-      <template is="dom-repeat" items="{{recipe.steps}}">
+      <template id="steps" is="dom-repeat" items="{{recipe.steps}}">
         <li>
-          <span>{{item}}</span>
+          <paper-textarea value="{{item.text}}"></paper-textarea>
+          <paper-fab on-tap="_handleRemoveStep" icon="remove"></paper-fab>
         </li>
       </template>
     </ol>
+    <paper-fab on-tap="_handleAddStep" icon="add"></paper-fab>
 
   </template>
 </dom-module>
 <script>
   (function () {
     Polymer({
-      is: 'edit-recipe',
+      is: 'recipe-edit',
       properties: {
         recipe: {
-          type: Object,
-          value: {}
+          type: Object
         }
+      },
+
+      _handleAddIngredient: function(e) {
+
+      },
+
+      _handleRemoveIngredient: function(e) {
+
+      },
+
+      _handleAddStep: function(e) {
+        this.push('recipe.steps', {text: ""});
+      },
+
+      _handleRemoveStep: function(e) {
+        var model = this.$.steps.modelForElement(e.target);
+        this.splice('recipe.steps', model.index, 1);
       }
     });
   })();

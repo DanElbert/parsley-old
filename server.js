@@ -15,6 +15,9 @@ fs.readdirSync(__dirname + '/app/models').forEach(function (file) {
 // Bootstrap application settings
 require('./config/express')(app);
 
+// Bootstrap mongo DB config
+require('./config/db')(app);
+
 // Bootstrap routes
 require('./config/routes')(app);
 
