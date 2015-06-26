@@ -13,12 +13,12 @@ module.exports = function (app) {
   var apiRoutes = express.Router();
 
   apiRoutes.get('/recipes', recipesController.index);
-  apiRoutes.put('/recipes', recipesController.create);
+  apiRoutes.post('/recipes', recipesController.create);
 
   apiRoutes.route('/recipes/:id')
     .all(recipesController.load)
     .get(recipesController.show)
-    .post(recipesController.update)
+    .put(recipesController.update)
     .delete(recipesController.destroy);
 
   apiRoutes.all('*', function(req, res) {

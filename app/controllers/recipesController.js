@@ -47,7 +47,10 @@ module.exports = {
   },
 
   create: function(req, res) {
-    req.db.recipes.insert(req.params.recipe, function(err, results) {
+    req.db.recipes.insert(req.body, function(err, results) {
+      console.log("create callback time!!");
+      console.log(err);
+      console.log(results);
       if (err) throw err;
       res.json(results);
     });

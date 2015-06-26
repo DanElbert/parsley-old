@@ -94,7 +94,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               </a>
           </paper-menu>
       </div>
-      <paper-header-panel main mode="waterfall-tall">
+      <paper-header-panel id="header-panel" main mode="waterfall-tall">
 
         <!-- Main Toolbar -->
         <paper-toolbar id="mainToolbar">
@@ -155,7 +155,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <section data-route="new-recipe">
               <paper-material elevation="1">
                 <h4 class="paper-font-display2">Create Recipe</h4>
-                <recipe-edit recipe="{{newRecipe}}"></recipe-edit>
+                <recipe-edit recipe="{{newRecipe}}" on-save="onRecipeSave"></recipe-edit>
               </paper-material>
             </section>
 
@@ -190,6 +190,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <paper-toast id="caching-complete"
                  duration="6000"
                  text="Caching complete! This app will work offline.">
+    </paper-toast>
+
+    <paper-toast id="alert-toast"
+                 duration="6000"
     </paper-toast>
 
     <platinum-sw-register href="/sw-import.js"

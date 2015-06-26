@@ -38,4 +38,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     }
   };
 
+  app.onRecipeSave = function(e) {
+    page('/recipes/create');
+  };
+
+  app.alert = function(msg) {
+    var alert = document.querySelector("#alert-toast");
+    alert.text = msg;
+    alert.show();
+  };
+
 })(document);

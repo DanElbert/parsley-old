@@ -5,16 +5,17 @@
     }
   </style>
   <template>
-    <paper-input label="Name"></paper-input>
+    <paper-input label="Name" value="{{recipe.name}}"></paper-input>
 
     <h4>Ingredients</h4>
 
     <ul>
-      <template is="dom-repeat" items="{{recipe.ingredients}}">
+      <template is="dom-repeat" id="ingredients" items="{{recipe.ingredients}}">
         <li>
-          <span>{{item.quantity}}</span>
-          <span>{{item.unit}}</span>
-          <span>{{item.name}}</span>
+          <paper-input label="Ingredient" value="{{item.name}}"></paper-input>
+          <paper-input label="Quantity" value="{{item.quantity}}"></paper-input>
+          <paper-input label="Unit" value="{{item.unit}}"></paper-input>
+          <paper-fab on-tap="_handleRemoveIngredient" icon="remove"></paper-fab>
         </li>
       </template>
     </ul>
@@ -23,7 +24,7 @@
     <h4>Steps</h4>
 
     <ol>
-      <template id="steps" is="dom-repeat" items="{{recipe.steps}}">
+      <template is="dom-repeat" id="steps" items="{{recipe.steps}}">
         <li>
           <paper-textarea value="{{item.text}}"></paper-textarea>
           <paper-fab on-tap="_handleRemoveStep" icon="remove"></paper-fab>
@@ -31,6 +32,11 @@
       </template>
     </ol>
     <paper-fab on-tap="_handleAddStep" icon="add"></paper-fab>
+
+    <paper-button raised on-tap="_handleSaveButton">
+      <iron-icon icon="check"></iron-icon>
+      Save
+    </paper-button>
 
   </template>
 </dom-module>
@@ -45,11 +51,12 @@
       },
 
       _handleAddIngredient: function(e) {
-
+        this.push('recipe.ingredients', {});
       },
 
       _handleRemoveIngredient: function(e) {
-
+        var model = this.$.ingredients.modelForElement(e.target);
+        this.splice('recipe.ingredients', model.index, 1);
       },
 
       _handleAddStep: function(e) {
@@ -59,6 +66,10 @@
       _handleRemoveStep: function(e) {
         var model = this.$.steps.modelForElement(e.target);
         this.splice('recipe.steps', model.index, 1);
+      },
+
+      _handleSaveButton: function(e) {
+        this.fire("save", this.recipe, {bubbles: false, cancelable: false});
       }
     });
   })();

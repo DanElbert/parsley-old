@@ -20,8 +20,9 @@
     reqwest({
       url: baseUri + url,
       method: 'POST',
-      data: data,
-      type: 'json'
+      data: JSON.stringify(data),
+      type: 'json',
+      contentType: 'application/json'
     })
     .then(function(res) {
       callback(res);
@@ -88,7 +89,7 @@
     },
 
     new: function() {
-      return {name: 'junky garbage', steps: [], ingredients: []};
+      return {name: '', steps: [], ingredients: []};
     }
   };
 
