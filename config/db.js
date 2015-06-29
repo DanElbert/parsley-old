@@ -1,12 +1,20 @@
-
+var fs = require('fs');
 var config = require('config');
-var db = require('mongoskin').db(config.dbUrl);
+var mongoose = require('mongoose');
 
-db.bind('recipes');
+var connect = function () {
+  var options = { server: { socketOptions: { keepAlive: 1 } } };
+  mongoose.connect(config.dbUrl, options);
+};
+
+mongoose.connection.on('error', console.log);
+mongoose.connection.on('disconnected', connect);
 
 module.exports = function(app) {
-  app.use(function(req, res, next) {
-    req.db = db;
-    next();
+  connect();
+
+  // Bootstrap models
+  fs.readdirSync(__dirname + '/../app/models').forEach(function (file) {
+    if (~file.indexOf('.js')) require('app/models/' + file);
   });
-};
+}

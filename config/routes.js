@@ -2,7 +2,7 @@
 var express = require('express');
 var config = require('config');
 
-var recipesController = require("recipesController");
+var recipesController = require("app/controllers/recipesController");
 
 /**
  * Expose routes

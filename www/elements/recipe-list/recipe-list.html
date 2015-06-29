@@ -5,9 +5,17 @@
     }
   </style>
   <template>
-    <template is="dom-repeat" items="{{recipeList}}">
-      <a is="routing-a" href="{{recipeUrl(item._id)}}">{{item.name}}</a>
-    </template>
+    <div class="list">
+      <template id="recipeRepeater" is="dom-repeat" items="{{recipeList}}">
+        <paper-icon-item on-tap="_itemClick">
+          <iron-icon icon="view-headline"></iron-icon>
+          <paper-item-body>
+            <div>{{item.name}}</div>
+            <div secondary="">{{item.createdAt}}</div>
+          </paper-item-body>
+        </paper-icon-item>
+      </template>
+    </div>
   </template>
 </dom-module>
 <script>
@@ -23,6 +31,11 @@
 
       recipeUrl: function(id) {
         return "/recipes/" + id;
+      },
+
+      _itemClick: function(e) {
+        var model = this.$.recipeRepeater.modelForElement(e.target);
+        page(this.recipeUrl(model.item._id));
       }
     });
   })();

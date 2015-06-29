@@ -1,58 +1,29 @@
-var mongo = require('mongoskin');
+var mongoose = require('mongoose');
 
-var gc = {
-  id: 5,
-  name: "Grilled Cheese",
-  steps: [
-    "Butter bread",
-    "Heat pan",
-    "Apply cheese",
-    "Grill until perfect"
-  ],
-  ingredients: [
-    {name: "Bread", quantity: 2, unit: "slices"},
-    {name: "American Cheese", quantity: 2, unit: "slices"}
-  ]
-};
-
-var c = {
-  id: 25,
-  name: "Cereal and Milk",
-  steps: [
-    "Pour cereal in bowl",
-    "Pour milk over cereal",
-    "Consume immediately"
-  ],
-  ingredients: [
-    {name: "Cereal (Any standard boxed type)", quantity: 2, unit: "cups"},
-    {name: "Whole Milk", quantity: 1, unit: "cups"}
-  ]
-};
+var Recipe = mongoose.model('Recipe');
 
 module.exports = {
 
   load: function(req, res, next) {
-    req.db.recipes.findOne({_id: mongo.ObjectID.createFromHexString(req.params.id)}, function(err, results) {
+    Recipe.findById(req.params.id, function(err, recipe) {
       if (err) throw err;
-      req.recipe = results;
+      req.recipe = recipe;
       next();
     });
   },
 
   index: function(req, res) {
-    req.db.recipes.find().toArray(function(err, results) {
+    Recipe.find({}, function(err, recipes) {
       if (err) throw err;
-      res.json(results);
+      res.json(recipes);
     });
   },
 
   create: function(req, res) {
-    req.db.recipes.insert(req.body, function(err, results) {
-      console.log("create callback time!!");
-      console.log(err);
-      console.log(results);
+    recipe = new Recipe(req.body);
+    recipe.save(function(err) {
       if (err) throw err;
-      res.json(results);
+      res.json(recipe);
     });
   },
 

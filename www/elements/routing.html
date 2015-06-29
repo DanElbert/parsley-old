@@ -13,9 +13,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   window.addEventListener('WebComponentsReady', function() {
 
     page('*', function(ctx, next) {
-      document.scrollTop = 0;
-      document.documentElement.scrollTop = 0
-      console.log("WTF??");
+      document.querySelector("#header-panel").scroller.scrollTop = 0;
       next();
     });
 
@@ -40,6 +38,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     });
 
     page('/recipes/create', function(ctx) {
+
+      if (!app.newRecipe) {
+        page("/recipes");
+        return;
+      }
+
       app.recipesData.create(app.newRecipe,
       function(data) {
         app.alert("Recipe Saved");
