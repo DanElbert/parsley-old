@@ -252,8 +252,10 @@ gulp.task('default', ['clean'], function (cb) {
   runSequence(
     ['copy', 'styles'],
     'elements',
-    ['jshint', 'images', 'fonts', 'html', 'sym_bower_components'],
-    'vulcanize', 'precache', 'unsym_bower_components',
+    'sym_bower_components',
+    ['jshint', 'images', 'fonts', 'html'],
+    'vulcanize', 'precache',
+    'unsym_bower_components',
     cb);
 });
 
