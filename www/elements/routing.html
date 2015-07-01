@@ -23,7 +23,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     page('/recipes', function () {
       app.recipesData.getAll({}, function(data) {
-        app.recipeList = data;
+        app.recipeList = BaseModel.fromList(RecipeModel, data);
         app.route = 'recipes';
       },
       function(err, msg) {
@@ -33,31 +33,36 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     });
 
     page('/recipes/new', function() {
-      app.newRecipe = app.recipesData.new();
+      app.newRecipe = new RecipeModel(app.recipesData.new());
       app.route = 'new-recipe';
     });
 
     page('/recipes/create', function(ctx) {
 
       if (!app.newRecipe) {
-        page("/recipes");
+        page("/recipes/new");
         return;
       }
 
-      app.recipesData.create(app.newRecipe,
+      app.recipesData.create(app.newRecipe.toJson(),
       function(data) {
         app.alert("Recipe Saved");
         page("/recipes");
       },
       function(err, msg) {
-        app.alert("Recipe Failed to Save: " + msg);
+        if (err.status === 422) {
+          app.alert("Recipe could not be saved because there were validation errors");
+          app.set("newRecipe.errors", JSON.parse(err.response).errors);
+        } else {
+          app.alert("Recipe Failed to Save: " + (msg || "Unknown Error"));
+        }
         app.route = 'new-recipe';
       });
     });
 
     page('/recipes/:id', function (ctx) {
       app.recipesData.get(ctx.params.id, function(data) {
-        app.showRecipe = data;
+        app.showRecipe = new RecipeModel(data);
         app.route = 'show-recipe';
       },
       function(err, msg) {
@@ -68,7 +73,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     page('/recipes/:id/edit', function(ctx) {
       app.recipesData.get(ctx.params.id, function(data) {
-        app.editRecipe = data;
+        app.editRecipe = new RecipeModel(data);
         app.route = 'edit-recipe';
       },
       function(err, msg) {

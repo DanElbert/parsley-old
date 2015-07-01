@@ -6,23 +6,24 @@ module.exports = {
 
   load: function(req, res, next) {
     Recipe.findById(req.params.id, function(err, recipe) {
-      if (err) throw err;
+      if (err) return next(err);
       req.recipe = recipe;
       next();
     });
   },
 
-  index: function(req, res) {
+  index: function(req, res, next) {
     Recipe.find({}, function(err, recipes) {
-      if (err) throw err;
+      if (err) return next(err);
       res.json(recipes);
     });
   },
 
-  create: function(req, res) {
+  create: function(req, res, next) {
     recipe = new Recipe(req.body);
     recipe.save(function(err) {
-      if (err) throw err;
+      console.log(recipe);
+      if (err) return next(err);
       res.json(recipe);
     });
   },
@@ -39,4 +40,4 @@ module.exports = {
 
   }
 
-}
+};

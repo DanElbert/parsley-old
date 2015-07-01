@@ -3,6 +3,7 @@ var express = require('express');
 var config = require('config');
 
 var recipesController = require("app/controllers/recipesController");
+var errorsController = require("app/controllers/errorsController");
 
 /**
  * Expose routes
@@ -36,4 +37,8 @@ module.exports = function (app) {
       res.sendFile(config.root + '/dist/index.html');
     }
   });
+
+  // Error Handling
+  app.use(errorsController.validationError);
+  app.use(errorsController.unknownError);
 }

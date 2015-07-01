@@ -38,9 +38,4 @@ module.exports = function (app) {
   app.use(session({
     keys: [config.sessionKey]
   }));
-
-  // Error handler
-  // app.use(function(err, req, res, next) {
-  //
-  // });
 };

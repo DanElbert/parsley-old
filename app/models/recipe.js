@@ -5,13 +5,23 @@ var Schema = mongoose.Schema;
 var IngredientSchema = require('app/models/ingredient').schema;
 
 var StepSchema = new Schema({
-  text: String
+  text: {
+    type: String,
+    required: true
+  }
 });
 
 var RecipeSchema = new Schema({
-  name: String,
-  steps: [StepSchema],
-  ingredients: [IngredientSchema]
+  name: {
+    type: String,
+    required: true
+  },
+  steps: {
+    type:  [StepSchema]
+  },
+  ingredients: {
+    type: [IngredientSchema]
+  }
 });
 
 RecipeSchema.plugin(timestamps);

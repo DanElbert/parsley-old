@@ -5,16 +5,27 @@
     }
   </style>
   <template>
-    <paper-input label="Name" value="{{recipe.name}}"></paper-input>
+
+    <div class="errors">
+      <ul>
+        <template is="dom-repeat" id="errors" items="{{recipe.errors}}">
+          <li>
+            <span>{{item.message}}</span>
+          </li>
+        </template>
+      </ul>
+    </div>
+
+    <paper-input id="nameInput" label="Name" value="{{recipe.name}}" auto-validate="true" required error-message="Required"></paper-input>
 
     <h4>Ingredients</h4>
 
     <ul>
       <template is="dom-repeat" id="ingredients" items="{{recipe.ingredients}}">
         <li>
-          <paper-input label="Ingredient" value="{{item.name}}"></paper-input>
-          <paper-input label="Quantity" value="{{item.quantity}}"></paper-input>
-          <paper-input label="Unit" value="{{item.unit}}"></paper-input>
+          <paper-input label="Ingredient" value="{{item.name}}" required></paper-input>
+          <paper-input label="Quantity" value="{{item.quantity}}" required></paper-input>
+          <paper-input label="Unit" value="{{item.unit}} required"></paper-input>
           <paper-fab on-tap="_handleRemoveIngredient" icon="remove"></paper-fab>
         </li>
       </template>
@@ -26,7 +37,7 @@
     <ol>
       <template is="dom-repeat" id="steps" items="{{recipe.steps}}">
         <li>
-          <paper-textarea value="{{item.text}}"></paper-textarea>
+          <paper-textarea value="{{item.text}}" required></paper-textarea>
           <paper-fab on-tap="_handleRemoveStep" icon="remove"></paper-fab>
         </li>
       </template>
@@ -48,6 +59,17 @@
         recipe: {
           type: Object
         }
+      },
+
+      observers: [
+        '_errorsUpdated(recipe.errors)'
+      ],
+
+      _errorsUpdated: function(errors) {
+        console.log("Editor totally sees these errors:");
+        console.log(errors);
+        // this.$.nameInput.errorMessage = "abc";
+        // this.$.nameInput.invalid = true;
       },
 
       _handleAddIngredient: function(e) {
