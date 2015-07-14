@@ -55,8 +55,8 @@
     "compression": "^1.5.0",
     "cookie-session": "^1.1.0",
     "express": "^4.12.4",
-    "mongodb": "^1.4.38",
-    "mongoose": "^4.0.6",
+    "mongodb": "^2.0.37",
+    "mongoose": "^4.0.7",
     "mongoose-timestamp": "^0.4.0",
     "morgan": "^1.6.0"
   }

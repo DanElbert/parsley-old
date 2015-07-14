@@ -23,7 +23,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     page('/recipes', function () {
       app.recipesData.getAll({}, function(data) {
-        app.recipeList = BaseModel.fromList(RecipeModel, data);
+        app.recipeList = data;
         app.route = 'recipes';
       },
       function(err, msg) {
@@ -33,7 +33,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     });
 
     page('/recipes/new', function() {
-      app.newRecipe = new RecipeModel(app.recipesData.new());
+      app.newRecipe = app.recipesData.new();
       app.route = 'new-recipe';
     });
 
@@ -44,15 +44,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         return;
       }
 
-      app.recipesData.create(app.newRecipe.toJson(),
+      app.recipesData.create(app.newRecipe,
       function(data) {
         app.alert("Recipe Saved");
         page("/recipes");
       },
       function(err, msg) {
         if (err.status === 422) {
+          var errors = JSON.parse(err.response).errors;
           app.alert("Recipe could not be saved because there were validation errors");
-          app.set("newRecipe.errors", JSON.parse(err.response).errors);
+          // work around to refresh all bindings
+          var tempRec = new RecipeModel(app.newRecipe.toJson());
+          tempRec.applyErrors(errors);
+          app.set("newRecipe", tempRec);
         } else {
           app.alert("Recipe Failed to Save: " + (msg || "Unknown Error"));
         }
@@ -62,7 +66,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     page('/recipes/:id', function (ctx) {
       app.recipesData.get(ctx.params.id, function(data) {
-        app.showRecipe = new RecipeModel(data);
+        app.showRecipe = data;
         app.route = 'show-recipe';
       },
       function(err, msg) {
@@ -73,7 +77,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     page('/recipes/:id/edit', function(ctx) {
       app.recipesData.get(ctx.params.id, function(data) {
-        app.editRecipe = new RecipeModel(data);
+        app.editRecipe = data;
         app.route = 'edit-recipe';
       },
       function(err, msg) {

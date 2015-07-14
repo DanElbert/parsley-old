@@ -1,0 +1,46 @@
+
+
+<dom-module id="ingredient-edit">
+  <style>
+    :host {
+
+    }
+  </style>
+  <template>
+
+    <div class="errors">
+      <ul>
+        <template is="dom-repeat" id="errors" items="{{ingredient.errors}}">
+          <li>
+            <span>{{item.message}}</span>
+          </li>
+        </template>
+      </ul>
+    </div>
+
+    <paper-input label="Ingredient" value="{{ingredient.name}}" required auto-validate="true"></paper-input>
+    <paper-input label="Quantity" value="{{ingredient.quantity}}" required></paper-input>
+    <paper-input label="Unit" value="{{ingredient.unit}}" required></paper-input>
+
+  </template>
+</dom-module>
+<script>
+  (function () {
+    Polymer({
+      is: 'ingredient-edit',
+      properties: {
+        ingredient: {
+          type: Object,
+          notify: true
+        }
+      },
+
+      observers: [
+        '_errorsUpdated(ingredient.errors)'
+      ],
+
+      _errorsUpdated: function(errors) {
+      }
+    });
+  })();
+</script>

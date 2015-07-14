@@ -1,11 +1,12 @@
 (function(window) {
 
   function BaseModel(json) {
-    this.fromJson(json);
-  };
+    if (json) {
+      this.fromJson(json);
+    }
+  }
 
-  BaseModel.prototype.initialize = function(json) {
-    if (json) this.fromJson(json);
+  BaseModel.prototype.initialize = function() {
   };
 
   BaseModel.prototype.fromJson = function(json) {
@@ -21,7 +22,7 @@
         self[field] = [];
         value.forEach(function(v) {
           self[field].push(self.valueFromJson(field, v));
-        })
+        });
       } else {
         self[field] = self.valueFromJson(field, value);
       }
@@ -51,7 +52,7 @@
         json[field] = [];
         value.forEach(function(v) {
           json[field].push(self.valueToJson(field, v));
-        })
+        });
       } else {
         json[field] = self.valueToJson(field, value);
       }
@@ -77,19 +78,58 @@
     return this.metadata.modelMappings;
   };
 
+  BaseModel.prototype.applyErrors = function(errors) {
+    var errCopy = errors.slice(0);
+    var modelMaps = this.modelMappings();
+
+    Object.keys(modelMaps).forEach(function(prop) {
+      var propValue = this[prop];
+
+      if (propValue instanceof Array) {
+        propValue.forEach(function(v, idx) {
+          this.setErrorsOnModel(v, prop + '.' + idx.toString(), errCopy);
+        }, this);
+      } else {
+        this.setErrorsOnModel(propValue, prop, errCopy);
+      }
+    }, this);
+
+    this.errors = errCopy;
+  };
+
+  BaseModel.prototype.setErrorsOnModel = function(model, path, errors) {
+    var modelErrors = [];
+    var idxToRemove = [];
+    errors.forEach(function(err, idx) {
+      if (err.path.indexOf(path) === 0) {
+        modelErrors.push({
+          kind: err.kind,
+          message: err.message,
+          name: err.name,
+          path: err.path.slice(path.length + 1)
+        });
+        idxToRemove.push(idx);
+      }
+    }, this);
+
+    idxToRemove.sort().reverse().forEach(function(i) { errors.splice(i, 1); });
+    model.applyErrors(modelErrors);
+  };
+
   BaseModel.create = function(modelName, options) {
-    var str = "var " + modelName + " = function(json) { this.initialize(json); }; " + modelName + ";";
+    var str = "var " + modelName + " = function(json) { BaseModel.call(this, json); this.initialize(); }; " + modelName + ";";
+    /*jslint evil: true */
     var klass = eval(str);
-    klass.prototype = BaseModel.prototype;
+    klass.prototype = Object.create(BaseModel.prototype);
 
     klass.prototype.metadata = {
-      ignoredFields: options["ignoredFields"] || [],
-      modelMappings: options["modelMappings"] || {}
+      ignoredFields: options.ignoredFields || [],
+      modelMappings: options.modelMappings || {}
     };
 
-    if (options["methods"]) {
-      Object.keys(options["methods"]).forEach(function(m) {
-        klass.prototype[m] = options["methods"][m];
+    if (options.methods) {
+      Object.keys(options.methods).forEach(function(m) {
+        klass.prototype[m] = options.methods[m];
       });
     }
 

@@ -73,23 +73,53 @@
 
   var recipesData = {
     getAll: function(params, callback, errback) {
-      get('/recipes/?' + toQueryString(params), callback, errback);
+      get(
+        '/recipes/?' + toQueryString(params),
+        function(res) {
+          var recipes = BaseModel.fromList(RecipeModel, res);
+          callback(recipes);
+        },
+        errback
+      );
     },
 
     get: function(id, callback, errback) {
-      get('/recipes/' + id, callback, errback);
+      get(
+        '/recipes/' + id,
+        function(res) {
+          var recipe = new RecipeModel(res);
+          callback(recipe);
+        },
+        errback
+      );
     },
 
     create: function(recipe, callback, errback) {
-      post('/recipes/', recipe, callback, errback);
+      post(
+        '/recipes/',
+        recipe.toJson(),
+        function(res) {
+          var recipe = new RecipeModel(res);
+          callback(recipe);
+        },
+        errback
+      );
     },
 
     update: function(recipe, callback, errback) {
-      put('recipes/' + recipe.id, recipe, callback, errback);
+      put(
+        'recipes/' + recipe.id,
+        recipe.toJson(),
+        function(res) {
+          var recipe = new RecipeModel(res);
+          callback(recipe);
+        },
+        errback
+      );
     },
 
     new: function() {
-      return {name: '', steps: [], ingredients: []};
+      return new RecipeModel();
     }
   };
 

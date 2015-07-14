@@ -1,0 +1,36 @@
+<dom-module id="field-validator">
+</dom-module>
+
+<script>
+  (function () {
+    Polymer({
+      is: 'field-validator',
+      behaviors: [Polymer.IronValidatorBehavior],
+      properties: {
+        errors: {
+          type: Array
+        },
+
+        errorMessage: {
+          type: String,
+          notify: true
+        }
+      },
+
+      validate: function(values) {
+        console.log("Validate!");
+        console.log(values);
+        if (this.errors && this.errors.length) {
+          var msg = "";
+          this.errors.forEach(function(err) {
+            msg += err.message;
+          }, this);
+
+          this.errorMessage = msg;
+          return false;
+        }
+        return true;
+      }
+    });
+  })();
+</script>

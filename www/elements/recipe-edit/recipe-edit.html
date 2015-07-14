@@ -1,3 +1,7 @@
+
+<link rel="import" href="field-validator.html">
+<link rel="import" href="ingredient-edit.html">
+
 <dom-module id="recipe-edit">
   <style>
     :host {
@@ -16,16 +20,14 @@
       </ul>
     </div>
 
-    <paper-input id="nameInput" label="Name" value="{{recipe.name}}" auto-validate="true" required error-message="Required"></paper-input>
+    <paper-input id="nameInput" label="Name" value="{{recipe.name}}" auto-validate="true" validator="field-validator"></paper-input>
 
     <h4>Ingredients</h4>
 
     <ul>
       <template is="dom-repeat" id="ingredients" items="{{recipe.ingredients}}">
         <li>
-          <paper-input label="Ingredient" value="{{item.name}}" required></paper-input>
-          <paper-input label="Quantity" value="{{item.quantity}}" required></paper-input>
-          <paper-input label="Unit" value="{{item.unit}} required"></paper-input>
+          <ingredient-edit ingredient="{{item}}"></ingredient-edit>
           <paper-fab on-tap="_handleRemoveIngredient" icon="remove"></paper-fab>
         </li>
       </template>
@@ -57,7 +59,13 @@
       is: 'recipe-edit',
       properties: {
         recipe: {
-          type: Object
+          type: Object,
+          notify: true
+        },
+
+        nameErrorMessage: {
+          type: String,
+          notify: true
         }
       },
 
@@ -65,15 +73,24 @@
         '_errorsUpdated(recipe.errors)'
       ],
 
+      nameErrors: function(errors) {
+        if (!errors || !errors.length) return [];
+
+        var errs = [];
+        errors.forEach(function(err) {
+          if (err.path == "name") {
+            errs.push(err);
+          }
+        }, this);
+
+        return errs;
+      },
+
       _errorsUpdated: function(errors) {
-        console.log("Editor totally sees these errors:");
-        console.log(errors);
-        // this.$.nameInput.errorMessage = "abc";
-        // this.$.nameInput.invalid = true;
       },
 
       _handleAddIngredient: function(e) {
-        this.push('recipe.ingredients', {});
+        this.push('recipe.ingredients', this.recipe.createIngredient());
       },
 
       _handleRemoveIngredient: function(e) {
@@ -82,7 +99,7 @@
       },
 
       _handleAddStep: function(e) {
-        this.push('recipe.steps', {text: ""});
+        this.push('recipe.steps', this.recipe.createStep());
       },
 
       _handleRemoveStep: function(e) {

@@ -22,7 +22,6 @@ module.exports = {
   create: function(req, res, next) {
     recipe = new Recipe(req.body);
     recipe.save(function(err) {
-      console.log(recipe);
       if (err) return next(err);
       res.json(recipe);
     });
